@@ -15,7 +15,7 @@ import com.cleanup.todoc.model.Task;
 
 @Database(entities = {Project.class, Task.class}, version = 1)
 public abstract class TodocDatabase extends RoomDatabase{
-    public abstract Dao dao();
+    public abstract ProjectDao dao();
 
     public static volatile TodocDatabase INSTANCE;
 

@@ -12,20 +12,11 @@ import com.cleanup.todoc.model.Task;
 import java.util.List;
 
 @androidx.room.Dao
-public interface Dao {
+public interface ProjectDao {
     @Query("SELECT * FROM projet")
     LiveData<List<Project>> getAllProjects();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertProjects(Project... projects);
-
-    @Query("SELECT * FROM tache")
-    LiveData<List<Task>> getAlltasks();
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertTask(Task task);
-
-    @Delete
-    void deleteTask(Task task);
 
 }
