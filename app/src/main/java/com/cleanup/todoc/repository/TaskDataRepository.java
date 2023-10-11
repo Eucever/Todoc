@@ -12,7 +12,7 @@ public class TaskDataRepository {
 
     public TaskDataRepository (TaskDao taskDao) {mTaskDao = taskDao;}
 
-    public LiveData<List<Task>> getAlltasks(){return mTaskDao.getAlltasks();}
+    public LiveData<List<Task>> getAllTasks(){return mTaskDao.getAlltasks();}
 
     public void createTask(Task task){mTaskDao.insertTask(task);}
 

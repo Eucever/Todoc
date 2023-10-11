@@ -19,6 +19,10 @@ public class TaskViewModel {
 
     private final Executor mExecutor;
 
+    private LiveData<List<Project>> mProjects;
+
+
+
 
     public TaskViewModel (ProjectDataRepository projectDataRepository, TaskDataRepository taskDataRepository, Executor executor){
         mProjectRepo = projectDataRepository;
@@ -26,10 +30,18 @@ public class TaskViewModel {
         mExecutor = executor;
     }
 
+
     //For Project
 
+    public void init(){
+        if(mProjects != null){
+            return;
+        }
+        mProjects = mProjectRepo.getAllProjects();
+
+    }
     public LiveData<List<Project>> getAllProjects(){
-        return mProjectRepo.getAllProjects();
+        return mProjects;
     }
 
     public void insertProjects(Project... projects){
@@ -37,12 +49,12 @@ public class TaskViewModel {
     }
 
     // For Task
-    public LiveData<List<Task>> getAlltasks(){
-       return mTaskRepo.getAlltasks();
+    public LiveData<List<Task>> getAllTasks(){
+       return mTaskRepo.getAllTasks();
     }
-    public void createTask (long id, long projectId, String name,long creationTimestamp ){
+    public void createTask (Task task){
         mExecutor.execute(()->{
-            mTaskRepo.createTask(new Task(id, projectId, name, creationTimestamp));
+            mTaskRepo.createTask(task);
         });
     }
     public void deleteTask(Task task){
