@@ -14,7 +14,7 @@ public class TaskDataRepository {
 
     public LiveData<List<Task>> getAlltasks(){return mTaskDao.getAlltasks();}
 
-    public void insertTask(Task task){mTaskDao.insertTask(task);}
+    public void createTask(Task task){mTaskDao.insertTask(task);}
 
     public void deleteTask(Task task){mTaskDao.deleteTask(task);}
 
