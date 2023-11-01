@@ -13,7 +13,7 @@ import java.util.List;
 
 @androidx.room.Dao
 public interface TaskDao {
-
+    // contient les instruction pour la base de donnée concernant la table tache
     @Query("SELECT * FROM tache")
     LiveData<List<Task>> getAlltasks();
 

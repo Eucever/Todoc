@@ -2,6 +2,7 @@ package com.cleanup.todoc.ui;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,16 +16,22 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cleanup.todoc.R;
+import com.cleanup.todoc.injection.Injection;
+import com.cleanup.todoc.injection.ViewModelFactory;
 import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
+import com.cleanup.todoc.viewmodel.TaskViewModel;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 /**
  * <p>Home activity of the application which is displayed when the user opens the app.</p>
@@ -34,20 +41,9 @@ import java.util.Date;
  */
 public class MainActivity extends AppCompatActivity implements TasksAdapter.DeleteTaskListener {
     /**
-     * List of all projects available in the application
-     */
-    private final Project[] allProjects = Project.getAllProjects();
-
-    /**
-     * List of all current tasks of the application
-     */
-    @NonNull
-    private final ArrayList<Task> tasks = new ArrayList<>();
-
-    /**
      * The adapter which handles the list of tasks
      */
-    private final TasksAdapter adapter = new TasksAdapter(tasks, this);
+    private TasksAdapter adapter;
 
     /**
      * The sort method to be used to display tasks
@@ -89,11 +85,15 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
     @NonNull
     private TextView lblNoTasks;
 
+    private TaskViewModel mTaskViewModel;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+
+        adapter = new TasksAdapter(this);
 
         listTasks = findViewById(R.id.list_tasks);
         lblNoTasks = findViewById(R.id.lbl_no_task);
@@ -107,6 +107,38 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
                 showAddTaskDialog();
             }
         });
+
+        // Initialisation du taskViewModel
+        configureViewModel();
+
+        //Observation de la liste des projets
+        observeProjects();
+
+        //Observation de la liste des taches
+        observeTasks();
+
+
+    }
+
+    private void observeTasks() {
+        mTaskViewModel.getAllTasks().observe(this, this::updateTasks);
+
+    }
+
+    private void observeProjects() {
+        mTaskViewModel.getAllProjects().observe(this, this::updateProjects);
+    }
+
+    private void updateProjects(List<Project> projects) {
+        Log.i("Main","Rafraichissement de la liste (recyclerview) des projets depuis la base");
+        adapter.updateProjects(projects);
+
+    }
+    //On configure le viewModel en utilisant la factory
+    private void configureViewModel() {
+        ViewModelFactory viewModelFactory= Injection.provideViewModelFactory(this);
+        mTaskViewModel = new ViewModelProvider(this, viewModelFactory).get(TaskViewModel.class);
+        mTaskViewModel.init();
     }
 
     @Override
@@ -129,15 +161,15 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
             sortMethod = SortMethod.RECENT_FIRST;
         }
 
-        updateTasks();
+       observeTasks();
 
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onDeleteTask(Task task) {
-        tasks.remove(task);
-        updateTasks();
+        mTaskViewModel.deleteTask(task);
+        observeTasks();
     }
 
     /**
@@ -163,12 +195,9 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
             }
             // If both project and name of the task have been set
             else if (taskProject != null) {
-                // TODO: Replace this by id of persisted task
-                long id = (long) (Math.random() * 50000);
 
 
                 Task task = new Task(
-                        id,
                         taskProject.getId(),
                         taskName,
                         new Date().getTime()
@@ -209,17 +238,19 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
      * @param task the task to be added to the list
      */
     private void addTask(@NonNull Task task) {
-        tasks.add(task);
-        updateTasks();
+        mTaskViewModel.createTask(task);
+        observeTasks();
     }
 
     /**
      * Updates the list of tasks in the UI
      */
-    private void updateTasks() {
+    private void updateTasks(List<Task> tasks) {
+        Log.i("Main","Rafraichissement de la liste des taches depuis la base");
         if (tasks.size() == 0) {
             lblNoTasks.setVisibility(View.VISIBLE);
             listTasks.setVisibility(View.GONE);
+            adapter.updateTasks(tasks);
         } else {
             lblNoTasks.setVisibility(View.GONE);
             listTasks.setVisibility(View.VISIBLE);
@@ -289,11 +320,23 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
      * Sets the data of the Spinner with projects to associate to a new task
      */
     private void populateDialogSpinner() {
-        final ArrayAdapter<Project> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, allProjects);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        if (dialogSpinner != null) {
-            dialogSpinner.setAdapter(adapter);
-        }
+        mTaskViewModel.getAllProjects().observe(this, new Observer<List<Project>>() {
+            @Override
+            public void onChanged(List<Project> projects) {
+                if (projects != null){
+                    Log.i("Main","Rafraichissement de la liste des projets depuis la base dans le cadre d'ajout de tache");
+                    final ArrayAdapter<Project> adapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_item, projects);
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    if (dialogSpinner != null) {
+                        dialogSpinner.setAdapter(adapter);
+                    }
+
+                }
+                mTaskViewModel.getAllProjects().removeObserver(this);
+            }
+
+        });
+
     }
 
     /**

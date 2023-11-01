@@ -1,6 +1,7 @@
 package com.cleanup.todoc.viewmodel;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModel;
 
 import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.concurrent.Executor;
 
 
-public class TaskViewModel {
+public class TaskViewModel extends ViewModel {
 
     private final ProjectDataRepository mProjectRepo;
 

@@ -13,6 +13,7 @@ import java.util.List;
 
 @androidx.room.Dao
 public interface ProjectDao {
+    // contient les instruction pour la base de donnée concernant la table projet
     @Query("SELECT * FROM projet")
     LiveData<List<Project>> getAllProjects();
 

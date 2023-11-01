@@ -11,6 +11,7 @@ public class ProjectDataRepository {
 
     private final ProjectDao mProjectDao;
 
+    // Permet d'initier le repository
     public ProjectDataRepository (ProjectDao projectDao) {mProjectDao = projectDao;}
 
     public LiveData<List<Project>> getAllProjects(){ return mProjectDao.getAllProjects();}

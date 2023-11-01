@@ -10,6 +10,7 @@ import java.util.List;
 public class TaskDataRepository {
     private final TaskDao mTaskDao;
 
+    // Permet d'initier le repository
     public TaskDataRepository (TaskDao taskDao) {mTaskDao = taskDao;}
 
     public LiveData<List<Task>> getAllTasks(){return mTaskDao.getAlltasks();}
