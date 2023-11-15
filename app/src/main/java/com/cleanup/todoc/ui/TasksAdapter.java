@@ -158,7 +158,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
             lblTaskName.setText(task.getName());
             imgDelete.setTag(task);
 
-            //Faux : il faut faire un for sur la liste des projet de ce task adapter plutot que d'utiliser la liste en dur comme ci dessous
+
             Project taskProject = null;
 
             for (Project project : projects

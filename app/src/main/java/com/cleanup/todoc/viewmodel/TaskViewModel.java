@@ -20,6 +20,7 @@ public class TaskViewModel extends ViewModel {
 
     private final Executor mExecutor;
 
+    // La liste des projets correspondant a la base
     private LiveData<List<Project>> mProjects;
 
 

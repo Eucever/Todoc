@@ -20,11 +20,16 @@ public abstract class TodocDatabase extends RoomDatabase{
 
     public static volatile TodocDatabase INSTANCE;
 
+    //fonction qui permet de récuperer une instance de la base
     public static TodocDatabase getINSTANCE(Context c) {
         if(INSTANCE == null){
             synchronized (TodocDatabase.class){
                 if (INSTANCE == null){
-                    INSTANCE = Room.databaseBuilder(c.getApplicationContext(), TodocDatabase.class, "Todoc.db").addCallback(prepopulateDb()).build();
+                    // si l'instance n'existe pas on crée la base de donnée
+                    INSTANCE = Room
+                            .databaseBuilder(c.getApplicationContext(), TodocDatabase.class, "Todoc.db")
+                            .addCallback(prepopulateDb())
+                            .build();
                 }
             }
         }
@@ -36,12 +41,15 @@ public abstract class TodocDatabase extends RoomDatabase{
             @Override
             public void onCreate(@NonNull SupportSQLiteDatabase db) {
                 super.onCreate(db);
+                //On récupère la liste de projets de la classe Project
                 Project[] projects = Project.getAllProjects();
                 for (Project project:projects){
+                    //Pour chaque projet on assigne les valeurs id,name et color
                     ContentValues contentValues = new ContentValues();
                     contentValues.put("id", project.getId());
                     contentValues.put("name", project.getName());
                     contentValues.put("color", project.getColor());
+                    //On insert chaque projet dans la base
                     db.insert("projet", OnConflictStrategy.IGNORE, contentValues);
                 }
             }
