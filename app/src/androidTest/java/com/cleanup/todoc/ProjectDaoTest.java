@@ -47,15 +47,19 @@ public class ProjectDaoTest {
 
     @Test
     public void insertAndGetProject() throws InterruptedException {
-        this.database.projectDao().insertProjects(mProjects);
-       List<Project> projects = LiveDataTestUtil.getOrAwaitValue(this.database.projectDao().getAllProjects());
+        List<Project> projects = LiveDataTestUtil.getOrAwaitValue(this.database.projectDao().getAllProjects());
 
-       assertTrue(projects.get(0).getId() == mProjects[0].getId());
-       assertTrue(projects.get(1).getId() == mProjects[1].getId());
-       assertTrue(projects.get(2).getId() == mProjects[2].getId());
+        assertTrue(projects.isEmpty());
+
+        this.database.projectDao().insertProjects(mProjects);
+
+        projects = LiveDataTestUtil.getOrAwaitValue(this.database.projectDao().getAllProjects());
+
+        assertTrue(projects.get(0).getId() == mProjects[0].getId());
+        assertTrue(projects.get(1).getId() == mProjects[1].getId());
+        assertTrue(projects.get(2).getId() == mProjects[2].getId());
 
 
     }
-    // https://pastebin.com/nxstNBY5
 
 }
