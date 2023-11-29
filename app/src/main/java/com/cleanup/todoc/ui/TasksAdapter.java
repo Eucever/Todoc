@@ -163,7 +163,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
 
             for (Project project : projects
                  ) {
-                if(task.getProject().getId() == project.getId()){
+                if(task.getProjectId() == project.getId()){
                     taskProject = project;
                     break;
                 }
