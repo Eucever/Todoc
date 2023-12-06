@@ -160,7 +160,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
 
 
             Project taskProject = null;
-
+            //permet de retrouver la tache par rapport a la liste de projets de la base de données
             for (Project project : projects
                  ) {
                 if(task.getProjectId() == project.getId()){
