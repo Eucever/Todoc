@@ -1,13 +1,14 @@
 # Todoc
-<h1> Description : </h1>
+<h2> Description : </h2>
 TODOC est une application de gestions de taches de projets utilisant une base de données.
 
-<h1> Versions utilisées : </h1>
+<h2> Versions utilisées : </h2>
 
 * Gradle 4.2.2
-* Java 8 (build 1.8.0_361-b09)
+* JDK JetBrains Runtime version 11.0.15
 * Room 2.4.2
 * API 28 (recommendé pour la machine virtuel)
+* SDK Version 31
 
 <h2> Conseils de démarrage de l'application : </h2>
 
