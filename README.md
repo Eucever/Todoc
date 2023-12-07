@@ -1,15 +1,15 @@
 # Todoc
-Description :
+<h1> Description : </h1>
 TODOC est une application de gestions de taches de projets utilisant une base de données.
 
-Versions utilisées :
+<h1> Versions utilisées : </h1>
 
 * Gradle 4.2.2
 * Java 8 (build 1.8.0_361-b09)
 * Room 2.4.2
 * API 28 (recommendé pour la machine virtuel)
 
-Conseils de démarrage de l'application :
+<h2> Conseils de démarrage de l'application : </h2>
 
 - Installer android studio
 - Aller dans l'onglet "Device manager"
