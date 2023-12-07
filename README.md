@@ -4,9 +4,9 @@ TODOC est une application de gestions de taches de projets utilisant une base de
 
 Versions utilisées :
 
-Gradle 4.2.2
-Java 8 (build 1.8.0_361-b09)
-Room 2.4.2
+Gradle 4.2.2,
+Java 8 (build 1.8.0_361-b09),
+Room 2.4.2,
 API 28 (recommendé pour la machine virtuel)
 
 Conseils de démarrage de l'application :
